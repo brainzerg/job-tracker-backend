@@ -10,6 +10,11 @@ app.get("/", (req, res) => {
     res.send("hello!")
 })
 
+app.get('/sample', (req, res) => {
+    console.log('sample')
+    res.send("sample")
+})
+
 app.listen(port, () => {
     console.log(`app started on port ${port}. Press Ctrl+c to shut down`)
 })
