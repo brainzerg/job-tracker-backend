@@ -1,7 +1,7 @@
 const {
   auth,
   claimCheck,
-  InsufficientScopeError,
+  InsufficientScopeError, 
 } = require('express-oauth2-jwt-bearer')
 const dotenv = require('dotenv')
 

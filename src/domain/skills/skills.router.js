@@ -4,8 +4,8 @@ const { validateAccessToken } = require('../../middleware/auth0.middleware')
 
 const skillsRouter = express.Router()
 
-skillsRouter.get('/', validateAccessToken, (req, res) => {
-  const message = getSkillsFromDatabase()
+skillsRouter.get('/', validateAccessToken, async (req, res) => {
+  const message = await getSkillsFromDatabase()
 
   res.status(200).json(message)
 })

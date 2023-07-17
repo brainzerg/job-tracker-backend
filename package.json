@@ -13,8 +13,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
     "express-oauth2-jwt-bearer": "^1.5.0",
     "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
     "nocache": "^4.0.0"
   },
   "devDependencies": {

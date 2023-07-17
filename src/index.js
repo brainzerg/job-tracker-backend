@@ -1,15 +1,20 @@
 const cors = require('cors')
 const dotenv = require('dotenv')
 const express = require('express')
+const _ = require('express-async-errors')
 const helmet = require('helmet')
 const nocache = require('nocache')
+const morgan = require('morgan')
+
+dotenv.config()
 
 const { errorHandler } = require('./middleware/error.middleware')
 const { notFoundHandler } = require('./middleware/not-found.middleware')
 
 const { skillsRouter } = require('./domain/skills/skills.router')
 
-dotenv.config()
+const { db } = require('./services/database')
+db.init()
 
 if (!(process.env.PORT && process.env.CLIENT_ORIGIN_URL)) {
   throw new Error(
@@ -24,6 +29,7 @@ const CLIENT_ORIGIN_URL = process.env.CLIENT_ORIGIN_URL
 const app = express()
 const apiRouter = express.Router()
 
+app.use(morgan('dev'))
 app.use(express.json())
 app.set('json spaces', 2)
 
@@ -69,4 +75,3 @@ app.use(notFoundHandler)
 app.listen(PORT, () => {
   console.log(`app started on port ${PORT}. Press Ctrl+c to shut down`)
 })
-
