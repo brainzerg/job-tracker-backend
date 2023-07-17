@@ -7,7 +7,7 @@ const nocache = require('nocache')
 const { errorHandler } = require('./middleware/error.middleware')
 const { notFoundHandler } = require('./middleware/not-found.middleware')
 
-const { skillsRouter } = require('src/domain/skills/skills.router')
+const { skillsRouter } = require('./domain/skills/skills.router')
 
 dotenv.config()
 
