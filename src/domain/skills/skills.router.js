@@ -1,10 +1,11 @@
 const express = require('express')
 const { getSkillsFromDatabase } = require('./skills.service')
-const { validateAccessToken } = require('../../middleware/auth0.middleware')
+const { validateAndGetUser } = require('../../middleware/user.middlware')
 
 const skillsRouter = express.Router()
 
-skillsRouter.get('/', validateAccessToken, async (req, res) => {
+skillsRouter.get('/', validateAndGetUser, async (req, res) => {
+  // req.user has { name, email, auth0Id, id } fields
   const message = await getSkillsFromDatabase()
 
   res.status(200).json(message)

@@ -33,8 +33,9 @@ CREATE TABLE IF NOT EXISTS `Jobs` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `User` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `fname` VARCHAR(45) NOT NULL,
-  `lname` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `auth0_id` VARCHAR(255) NOT NULL UNIQUE,
   PRIMARY KEY (`id`));
 
 
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `User` (
 CREATE TABLE IF NOT EXISTS `Applications` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` VARCHAR(45) NOT NULL,
-  `date` DATE NOT NULL,
+  `date` VARCHAR(45) NOT NULL,
   `Companies_id` INT NOT NULL,
   `Jobs_id` INT NOT NULL,
   `User_id` INT NOT NULL,
@@ -101,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `Contacts` (
   INDEX `fk_Contacts_Companies1_idx` (`Companies_id` ASC) VISIBLE);
 
 -- -----------------------------------------------------
--- INSERT INTO Companies, Jobs, User, Applications, Skills, User_has_Skills, Jobs_has_Skills, Contacts 
+-- INSERT INTO Companies, Jobs, User, Applications, Skills, User_has_Skills, Jobs_has_Skills, Contacts
 -- -----------------------------------------------------
 
 INSERT INTO Companies (name, products, headqtrs)
@@ -116,11 +117,11 @@ VALUES
 (3, 'Hillsboro, OR USA', '$105 K', '09-12-2023'),
 (1, 'Seattle, WA USA', '$120 K', '08-31-2023');
 
-INSERT INTO User (fname, lname)
+INSERT INTO User (name, email, auth0_id)
 VALUES
-('Christian', 'Kesting'),
-('Kim', 'Neher'),
-('Waffs', 'Kesting');
+('Christian Kesting', 'cKesting@gmail.com', 'test-auth0-123'),
+('Kim Neher', 'kNeher@gmail.com', 'test-auth0-234'),
+('Waffs Kesting', 'wKesting@gmail.com', 'test-auth0-555');
 
 INSERT INTO Applications (Companies_id, date, Jobs_id, status, User_id)
 VALUES
