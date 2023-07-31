@@ -17,9 +17,9 @@ class Database {
     this.pool = mysql.createPool(this.config)
   }
 
-  query(sql) {
+  query(sql, values) {
     return new Promise((resolve, reject) => {
-      this.pool.query(sql, (error, result) => {
+      this.pool.query(sql, values, (error, result) => {
         if (error) {
           reject(error)
         } else {
