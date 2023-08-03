@@ -30,7 +30,7 @@ const errorHandler = (error, request, response, next) => {
   }
 
   const status = 500
-  const message = 'Internal Server Error'
+  const message = error.message
 
   response.status(status).json({ message })
 }

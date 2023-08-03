@@ -12,6 +12,7 @@ const { errorHandler } = require('./middleware/error.middleware')
 const { notFoundHandler } = require('./middleware/not-found.middleware')
 
 const { skillsRouter } = require('./domain/skills/skills.router')
+const {jobsRouter} = require('./domain/jobs/jobs.router')
 
 const { db } = require('./services/database')
 db.init()
@@ -68,6 +69,7 @@ app.use(
 
 app.use('/api', apiRouter)
 apiRouter.use('/skills', skillsRouter)
+apiRouter.use('/jobs', jobsRouter)
 
 app.use(errorHandler)
 app.use(notFoundHandler)
