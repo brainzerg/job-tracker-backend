@@ -1,19 +1,101 @@
 const { db } = require('../../services/database')
+const { BadRequestError, BadRequestError } = require('../../errors/BadRequestError')
 
-const getSkillsFromDatabase = async () => {
-  // Here is how you would fetch from the database
-  // Replace below with a proper SQL statement
-  // TODO: Work in progress
-  console.log(await db.query('select * from Skills s join User_has_Skills uhs on s.id = uhs.user_id'))
-  const result = await db.query('select s.id as skill_id, s.type as name, uhs.proficiency as proficiency from Skills s join User_has_Skills uhs on s.id = uhs.user_id ' +
-    'where s.id = ?', [1])
-  console.log(result)
+const getUserSkills = async ({ userId }) => {
+  const userSkills = await db.query(
+    `SELECT s.id as id, s.type as name, uhs.proficiency
+     FROM Skills s
+              JOIN User_has_skills uhs ON uhs.Skills_id = s.id
+     WHERE uhs.User_id = ?`,
+    [userId],
+  )
 
-  return {
-    skills: result
+  return userSkills
+}
+
+const getUserSkillById = async ({ userId, skillId }) => {
+  const result = await db.query(
+    `SELECT s.id as id, s.type as name, uhs.proficiency
+     FROM Skills s
+              JOIN User_has_skills uhs ON uhs.Skills_id = s.id
+     WHERE uhs.User_id = ?
+       AND uhs.Skills_id = ?`,
+    [userId, skillId],
+  )
+
+  if (result.length === 0) {
+    throw new BadRequestError(`No skill by user id and skill id: ${userId}, ${skillId}`)
   }
+
+  return result[0]
+}
+
+const createUserSkill = async ({ userId, name, proficiency }) => {
+  const skillByName = await db.query(
+    `SELECT id, type as name
+     FROM Skills
+     WHERE type = ?`,
+    [name],
+  )
+
+  let skillId
+
+  if (skillByName.length === 0) {
+    const insertResult = await db.query(
+      `INSERT INTO Skills(type)
+       VALUES (?)`,
+      [name],
+    )
+    skillId = insertResult.insertId
+  } else {
+    skillId = skillByName[0].id
+  }
+
+
+  await db.query(
+    `INSERT INTO User_has_Skills (User_id, Skills_id, proficiency)
+     VALUES (?, ?, ?)`,
+    [userId, skillId, proficiency],
+  )
+
+  return getUserSkillById({ userId, skillId })
+}
+
+const updateUserSkill = async ({ userId, skillId, proficiency }) => {
+  const skillResult = await db.query(
+    `SELECT *
+     FROM Skills
+     WHERE id = ?`,
+    [skillId],
+  )
+
+  if (skillResult.length === 0) {
+    throw new BadRequestError(`No skill with id ${skillId}`)
+  }
+
+  await db.query(
+    `UPDATE User_has_Skills
+     SET proficiency = ?
+     WHERE User_id = ?
+       AND Skills_id = ?`,
+    [proficieny, userId, skillId],
+  )
+
+  return getUserSkillById({ userId, skillId })
+}
+
+const deleteUserSkill = async ({ userId, skillId }) => {
+  await getUserSkillById({ userId, skillId })
+
+  await db.query(
+    `DELETE
+     FROM User_has_Skills
+     WHERE User_id = ?
+       AND Skills_id = ?`,
+    [userId, skillId],
+  )
 }
 
 module.exports = {
-  getSkillsFromDatabase,
+  getUserSkills, getUserSkillById, createUserSkill, deleteUserSkill, updateUserSkill,
 }
