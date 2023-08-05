@@ -18,6 +18,7 @@ const { contactsRouter } = require('./domain/contacts/contacts.router')
 const { applicationsRouter } = require('./domain/applications/applications.router')
 const { companiesRouter } = require('./domain/companies/companies.router')
 
+const { idTokenHeader } = require('./utils/constants')
 const { db } = require('./services/database')
 db.init()
 
@@ -66,7 +67,7 @@ app.use(
   cors({
     origin: CLIENT_ORIGIN_URL,
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
-    allowedHeaders: ['Authorization', 'Content-Type'],
+    allowedHeaders: ['Authorization', 'Content-Type', idTokenHeader],
     maxAge: 86400,
   }),
 )
