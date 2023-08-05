@@ -1,31 +1,34 @@
 const { db } = require('../../services/database')
-const mysql = require('mysql')
-const { emptyPromise } = require('../../utils/constants')
+const { BadRequestError } = require('../../errors/BadRequestError')
 
 /**
  * GET companies list
  */
 const getCompanies = async () => {
   const result = await db.query(
-    `SELECT * FROM Companies`)
+    `SELECT *
+     FROM Companies`)
 
   return result
 }
 
 
- //GET company by id
- //@param id - companyId
+//GET company by id
+//@param id - companyId
 
 const getCompanyById = async ({ id }) => {
   const result = await db.query(
-    `SELECT * FROM Companies WHERE id = ?`, [+id])
+    `SELECT *
+     FROM Companies
+     WHERE id = ?`, [+id])
 
   if (result.length === 0) {
-    throw Error(`No company by id: ${id}`)
+    throw new BadRequestError(`No company with id: ${companyId}`)
   }
 
   return result[0]
 }
+
 
 //Create Company
 
@@ -42,11 +45,11 @@ const createCompany = async ({ name, products, headqtrs }) => {
 //Update Company
 
 const updateCompany = async ({ id, name, products, headqtrs }) => {
-  const updateCompanyQuery = db.query(
+  const updateCompanyQuery = await db.query(
     `UPDATE Companies
-     SET name    = ?,
+     SET name     = ?,
          products = ?,
-         headqtrs     = ?
+         headqtrs = ?
      WHERE id = ?`,
     [name, products, headqtrs, id])
 
@@ -55,7 +58,7 @@ const updateCompany = async ({ id, name, products, headqtrs }) => {
 
 
 //Delete a company given companyId
- //@param id
+//@param id
 
 const deleteCompany = async ({ id }) => {
   return db.query(

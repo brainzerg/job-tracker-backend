@@ -1,6 +1,5 @@
 const express = require('express')
 const { validateAndGetUser } = require('../../middleware/user.middlware')
-const { db } = require('../../services/database')
 const { getCompanyById, getCompanies, deleteCompany, createCompany, updateCompany } = require('./companies.service')
 
 const companiesRouter= express.Router()
@@ -33,7 +32,7 @@ companiesRouter.put('/:companyId', validateAndGetUser, async (req, res) => {
   const { name, products, headqtrs } = req.body
 
   const updatedCompany = await updateCompany({ id: companyId, name, products, headqtrs })
-  
+
   res.json(updatedCompany)
 })
 
