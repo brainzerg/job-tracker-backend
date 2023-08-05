@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `User` (
 CREATE TABLE IF NOT EXISTS `Applications` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` VARCHAR(45) NOT NULL,
-  `date` VARCHAR(45) NOT NULL,
+  `applydate` VARCHAR(45) NOT NULL,
   `Companies_id` INT NOT NULL,
   `Jobs_id` INT NOT NULL,
   `User_id` INT NOT NULL,
@@ -124,7 +124,7 @@ VALUES
 ('Kim Neher', 'kNeher@gmail.com', 'test-auth0-234'),
 ('Waffs Kesting', 'wKesting@gmail.com', 'test-auth0-555');
 
-INSERT INTO Applications (Companies_id, date, Jobs_id, status, User_id)
+INSERT INTO Applications (Companies_id, applydate, Jobs_id, status, User_id)
 VALUES
 (1, '07-04-23', 1, 'Applied', 1),
 (3, '06-29-23', 1, 'Job Offer', 3),

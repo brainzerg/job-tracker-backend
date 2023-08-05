@@ -3,6 +3,7 @@ const {
   UnauthorizedError,
   InsufficientScopeError,
 } = require('express-oauth2-jwt-bearer')
+const { BadRequestError } = require('../errors/BadRequestError')
 
 const errorHandler = (error, request, response, next) => {
   if (error instanceof InsufficientScopeError) {
@@ -26,6 +27,12 @@ const errorHandler = (error, request, response, next) => {
 
     response.status(error.status).json({ message })
 
+    return
+  }
+
+  if (error instanceof BadRequestError) {
+    const status = 400
+    response.status(status).json({ message: error.message })
     return
   }
 
