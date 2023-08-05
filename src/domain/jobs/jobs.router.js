@@ -1,9 +1,21 @@
 const express = require('express')
 const { validateAndGetUser } = require('../../middleware/user.middlware')
 const { db } = require('../../services/database')
-const { updateJob, getJobById, getJobs, deleteJob, createJob } = require('./jobs.service')
+const { updateJob, getJobById, getJobs, deleteJob, createJob, getJobFromCompanyId } = require('./jobs.service')
+const { BadRequestError } = require('../../errors/BadRequestError')
 
 const jobsRouter = express.Router()
+
+jobsRouter.get('/jobs-from-company', validateAndGetUser, async (req, res) => {
+  const { companyId } = req.query
+  if (isNaN(Number(companyId))) {
+    throw new BadRequestError(`Invalid company id: ${companyId}`)
+  }
+
+  const result = await getJobFromCompanyId({ companyId })
+
+  res.json(result)
+})
 
 jobsRouter.get('/:jobId', validateAndGetUser, async (req, res, next) => {
   const { jobId } = req.params
@@ -49,5 +61,6 @@ jobsRouter.delete('/:jobId', validateAndGetUser, async (req, res) => {
 
   res.json(result)
 })
+
 
 module.exports = { jobsRouter }

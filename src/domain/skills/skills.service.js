@@ -1,11 +1,11 @@
 const { db } = require('../../services/database')
-const { BadRequestError, BadRequestError } = require('../../errors/BadRequestError')
+const { BadRequestError } = require('../../errors/BadRequestError')
 
 const getUserSkills = async ({ userId }) => {
   const userSkills = await db.query(
     `SELECT s.id as id, s.type as name, uhs.proficiency
      FROM Skills s
-              JOIN User_has_skills uhs ON uhs.Skills_id = s.id
+              JOIN User_has_Skills uhs ON uhs.Skills_id = s.id
      WHERE uhs.User_id = ?`,
     [userId],
   )
@@ -17,7 +17,7 @@ const getUserSkillById = async ({ userId, skillId }) => {
   const result = await db.query(
     `SELECT s.id as id, s.type as name, uhs.proficiency
      FROM Skills s
-              JOIN User_has_skills uhs ON uhs.Skills_id = s.id
+              JOIN User_has_Skills uhs ON uhs.Skills_id = s.id
      WHERE uhs.User_id = ?
        AND uhs.Skills_id = ?`,
     [userId, skillId],
@@ -78,7 +78,7 @@ const updateUserSkill = async ({ userId, skillId, proficiency }) => {
      SET proficiency = ?
      WHERE User_id = ?
        AND Skills_id = ?`,
-    [proficieny, userId, skillId],
+    [proficiency, userId, skillId],
   )
 
   return getUserSkillById({ userId, skillId })

@@ -13,7 +13,7 @@ const skillsRouter = express.Router()
 skillsRouter.get('/', validateAndGetUser, async (req, res) => {
   const userId = req.user.id
 
-  const userSkills = getUserSkills({ userId })
+  const userSkills = await getUserSkills({ userId })
 
   res.json(userSkills)
 })

@@ -3,7 +3,7 @@ const { BadRequestError } = require('../../errors/BadRequestError')
 
 const getContacts = async ({ userId }) => {
   return await db.query(
-    `SELECT c.id, c.name, c.email, c.phone, co.name as companyName
+    `SELECT c.id, c.name, c.email, c.phone, co.name as companyName, co.id as companyId
      FROM Contacts c
               JOIN User u on c.User_id = u.id
               JOIN Companies co on c.Companies_id = co.id
@@ -13,7 +13,7 @@ const getContacts = async ({ userId }) => {
 
 const getContactById = async ({ userId, contactId }) => {
   const result = await db.query(
-    `SELECT c.id, c.name, c.email, c.phone, co.name as companyName
+    `SELECT c.id, c.name, c.email, c.phone, co.name as companyName, co.id as companyId
      FROM Contacts c
               JOIN User u on c.User_id = u.id
               JOIN Companies co on c.Companies_id = co.id

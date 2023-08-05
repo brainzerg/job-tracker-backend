@@ -72,26 +72,32 @@ const createJob = async ({ startdate, companyId, location, salary, position, ski
   const skillsResult = await db.query(
     `SELECT *
      FROM Skills
-     WHERE type in (?)`, skills)
+     WHERE type in (?)`, [skills])
 
   const skillsListInDb = skillsResult.map(skillRow => skillRow.type)
   const skillsNotInDb = skills.filter(skill => !skillsListInDb.includes(skill))
 
-  // for all the skills that aren't in the database, insert them into the Skills table
-  const valuesQueryForSkills = skillsNotInDb.map(skill => `(${mysql.escape(skill)})`)
-    .join(',')
+  console.log('skills in db:', skillsListInDb)
+  console.log('skills not in db:', skillsNotInDb)
 
-  await db.query(
-    `INSERT INTO Skills(type)
-     VALUES ` + valuesQueryForSkills)
+  if (skillsNotInDb.length > 0) {
+    // for all the skills that aren't in the database, insert them into the Skills table
+    const valuesQueryForSkills = skillsNotInDb.map(skill => `(${mysql.escape(skill)})`)
+      .join(',')
+
+    await db.query(
+      `INSERT INTO Skills(type)
+       VALUES ` + valuesQueryForSkills)
+  }
 
   // Insert all the skills in the request (which should be in the database)
   // into Jobs_has_Skills table
   const valuesQueryForJobsHasSkills = skills.map(skill =>
     `(${jobId}, (SELECT s.id FROM Skills s WHERE s.type = ${mysql.escape(skill)}))`)
     .join(',')
-  await db.query(`INSERT INTO Jobs_has_Skills(Jobs_id, Skills_id)
-                  VALUES ` + valuesQueryForJobsHasSkills)
+  await db.query(
+    `INSERT INTO Jobs_has_Skills(Jobs_id, Skills_id)
+     VALUES ` + valuesQueryForJobsHasSkills)
 
   return { id: jobId, startdate, companyId, location, salary, position, skills }
 }
@@ -157,7 +163,7 @@ const updateJob = async ({ id, startdate, companyId, location, salary, position,
     `DELETE
      FROM Jobs_has_Skills
      WHERE Skills_id in (?)
-       AND Jobs_id = ?`, [skillIdsToDelete, id])  : emptyPromise
+       AND Jobs_id = ?`, [skillIdsToDelete, id]) : emptyPromise
 
   await Promise.all([updateJobQuery, deleteSkillsQuery, insertJobHasSkillsQuery])
 
@@ -176,6 +182,27 @@ const deleteJob = async ({ id }) => {
      WHERE id = ?`, [id])
 }
 
+const getJobFromCompanyId = async ({ companyId }) => {
+  console.log(`company id: ${companyId}`)
+  return db.query(
+    `SELECT j.id,
+            j.startdate,
+            c.id                 as companyId,
+            c.name               as companyName,
+            j.position,
+            j.salary,
+            j.location,
+            group_concat(s.type) as skills
+     FROM Jobs j
+              JOIN Companies c ON j.Companies_id = c.id
+              LEFT JOIN Jobs_has_Skills jhs ON jhs.Jobs_id = j.id
+              LEFT JOIN Skills s ON jhs.Skills_id = s.id
+     WHERE j.Companies_id = ?
+     GROUP BY j.id`,
+    [companyId],
+  )
+}
+
 module.exports = {
-  getJobs, getJobById, createJob, updateJob, deleteJob,
+  getJobs, getJobById, createJob, updateJob, deleteJob, getJobFromCompanyId,
 }

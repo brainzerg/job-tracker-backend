@@ -3,7 +3,14 @@ const { BadRequestError } = require('../../errors/BadRequestError')
 
 const getApplications = async ({ userId }) => {
   const result = await db.query(
-    `SELECT a.id, a.applydate as applydate, c.name as companyName, j.position, j.startdate, a.status
+    `SELECT a.id,
+            a.applydate as applydate,
+            c.name as companyName,
+            c.id as companyId,
+            j.position,
+            j.startdate,
+            j.id as jobId,
+            a.status
      FROM Applications a
               JOIN User u on a.User_id = u.id
               JOIN Jobs j ON a.Jobs_id = j.id
@@ -16,7 +23,14 @@ const getApplications = async ({ userId }) => {
 
 const getApplicationById = async ({ userId, applicationId }) => {
   const result = await db.query(
-    `SELECT a.id, a.applydate as applydate, c.name as companyName, j.position, j.startdate, a.status
+    `SELECT a.id,
+            a.applydate as applydate,
+            c.name      as companyName,
+            c.id        as companyId,
+            j.position,
+            j.startdate,
+            j.id        as jobId,
+            a.status
      FROM Applications a
               JOIN User u on a.User_id = u.id
               JOIN Jobs j ON a.Jobs_id = j.id
