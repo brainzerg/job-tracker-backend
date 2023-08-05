@@ -47,11 +47,9 @@ CREATE TABLE IF NOT EXISTS `Applications` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` VARCHAR(45) NOT NULL,
   `applydate` VARCHAR(45) NOT NULL,
-  `Companies_id` INT NOT NULL,
   `Jobs_id` INT NOT NULL,
   `User_id` INT NOT NULL,
-  PRIMARY KEY (`id`, `Companies_id`, `Jobs_id`, `User_id`),
-  INDEX `fk_Applications_Companies1_idx` (`Companies_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`, `Jobs_id`, `User_id`),
   INDEX `fk_Applications_Jobs1_idx` (`Jobs_id` ASC) VISIBLE,
   INDEX `fk_Applications_Person1_idx` (`User_id` ASC) VISIBLE);
 
@@ -124,11 +122,11 @@ VALUES
 ('Kim Neher', 'kNeher@gmail.com', 'test-auth0-234'),
 ('Waffs Kesting', 'wKesting@gmail.com', 'test-auth0-555');
 
-INSERT INTO Applications (Companies_id, applydate, Jobs_id, status, User_id)
+INSERT INTO Applications (applydate, Jobs_id, status, User_id)
 VALUES
-(1, '07-04-23', 1, 'Applied', 1),
-(3, '06-29-23', 1, 'Job Offer', 3),
-(1, '05-20-23', 3, 'Investigation', 2);
+('07-04-23', 1, 'Applied', 1),
+('06-29-23', 1, 'Job Offer', 3),
+('05-20-23', 3, 'Investigation', 2);
 
 INSERT INTO Skills (type)
 VALUES
