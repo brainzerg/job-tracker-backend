@@ -7,7 +7,6 @@ const { emptyPromise } = require('../../utils/constants')
  */
 const getCompanies = async () => {
   const result = await db.query(
-    //const result = await db.query('SELECT name, headqtrs FROM Companies')
     `SELECT * FROM Companies`)
 
   return result
@@ -66,6 +65,5 @@ const deleteCompany = async ({ id }) => {
 }
 
 module.exports = {
-  //getJobs, getJobById, createJob, updateJob, deleteJob,
   getCompanies, getCompanyById, deleteCompany, createCompany, updateCompany,
 }
